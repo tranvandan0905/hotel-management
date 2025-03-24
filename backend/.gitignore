@@ -1,3 +1,2 @@
-node_modules 
-#nhung file k day len github
-.env
+node_modules/
+package-lock.json
