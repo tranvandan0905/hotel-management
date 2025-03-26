@@ -1,8 +1,7 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../database");
-const ChiNhanh = require("./Chinhanh");
+const ChiNhanh = require("./ChiNhanh");
 const ViTri = require("./ViTri");
-
+const sequelize = require("../database/database");
 const NhanVien = sequelize.define(
   "NhanVien",
   {
