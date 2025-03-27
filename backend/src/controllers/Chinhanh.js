@@ -1,8 +1,8 @@
 const ChiNhanh = require("../models/ChiNhanh");
 const getBranch = async (req, res) => {
   try {
-    const khachhangs = await ChiNhanh.findAll();
-    res.json(khachhangs);
+    const chiNhanh = await ChiNhanh.findAll();
+    res.json(chiNhanh);
   } catch (err) {
     console.error(err);
     res.status(500).send("Lỗi truy vấn cơ sở dữ liệu");
