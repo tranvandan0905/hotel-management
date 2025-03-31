@@ -1,5 +1,5 @@
 import React from "react";
-import HomePage from "./Layouts/Header";
+import HomePage from "../pages/TrangBooking/Header";
 const WebPage = () => {
   return (
     <div>

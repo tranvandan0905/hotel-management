@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { Dashboard, Auth } from "@/layouts";
 import SignIn from "@/pages/auth/sign-in";
 import SignUp from "@/pages/auth/sign-up";
-import WebPage from "@/TrangBooking/TrangChu";
+import WebPage from "./layouts/TrangChu";
 function App() {
   return (
     <Routes>
