@@ -1,10 +1,9 @@
 import React from "react";
-
+import HomePage from "./Layouts/Header";
 const WebPage = () => {
   return (
     <div>
-      <h1>Trang Web</h1>
-      <p>Đây là một trang khác trong cùng ứng dụng.</p>
+      <HomePage />
     </div>
   );
 };
