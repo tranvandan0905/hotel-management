@@ -2,10 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@material-tailwind/react";
 
 // Tạo danh sách ảnh từ thư mục public
-const imageList = Array.from({ length: 5 }, (_, i) => ({
-  src: `/img/imgBanner/Banner${i + 1}.jpg`,
-  alt: `Banner ${i + 1}`,
-}));
+const images = Array.from({ length: 3 }, (_, i) => `/img/imgBanner/Banner${i + 1}.jpg`);
 
 const Header = () => {
   return (
@@ -24,45 +21,35 @@ const Header = () => {
 };
 
 const Banner = () => {
-    
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [isFading, setIsFading] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isFading, setIsFading] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      nextImage();
-    }, 5000);
-
+      setIsFading(true);
+      setTimeout(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+        setIsFading(false);
+      }, 200); // Chuyển ảnh sau 300ms để không bị khựng
+    }, 3000); // Auto chuyển sau 2s
     return () => clearInterval(interval);
-  }, [currentIndex]);
-
-  const nextImage = () => {
-    setIsFading(true);
-    setTimeout(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % imageList.length);
-      setIsFading(false);
-    }, 500);
-  };
-
+  }, []); 
   return (
-    <div className="relative h-screen flex items-center justify-center text-white">
-      {/* Ảnh nền */}
-      <div
-        className={`absolute inset-0 bg-cover bg-center transition-opacity duration-500 ${
+    <div className="relative h-screen bg-cover bg-center flex items-center justify-center">
+      <img
+        key={currentIndex} // Reset nhanh hơn
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
           isFading ? "opacity-0" : "opacity-100"
         }`}
-        style={{ backgroundImage: `url(${imageList[currentIndex].src})` }}
-      ></div>
-
-      {/* Overlay màu đen */}
+        src={images[currentIndex]}
+        alt={`Banner ${currentIndex + 1}`}
+      />
       <div className="absolute inset-0 bg-black opacity-50"></div>
-
-      {/* Nội dung banner */}
-      <div className="text-center relative z-10">
+      <div className="text-center relative z-10 text-white">
         <p className="text-sm uppercase tracking-widest">Just Enjoy & Relax</p>
         <h2 className="text-5xl font-bold mt-4">Feel Relax & Enjoy</h2>
         <h2 className="text-5xl font-bold mb-6">Your Luxuriousness</h2>
-        <Button className="bg-white text-black px-6 py-2 rounded-lg text-lg">
+        <Button className="bg-blue-gray-300 text-white px-6 py-2 rounded-lg text-lg">
           See Our Rooms
         </Button>
       </div>
