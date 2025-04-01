@@ -3,7 +3,6 @@ import { Dashboard, Auth } from "@/layouts";
 import SignIn from "@/pages/auth/sign-in";
 import SignUp from "@/pages/auth/sign-up";
 import WebPage from "./layouts/WebPage"; // Đã đổi từ TrangChu.jsx sang WebPage.jsx
-import HomePage from "@/pages/TrangBooking/HomePage"; // Thêm import cho trang chủ
 
 function App() {
   return (

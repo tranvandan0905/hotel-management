@@ -6,9 +6,9 @@ const Footer = () => {
           {/* Logo và thông tin liên hệ */}
           <div className="flex flex-col items-center md:items-start">
             <img
-              src="./img/LogoHinh.png"
+              src="./img/logo_booking_white.png"
               alt="Booking Logo"
-              className="w-13 h-12 mb-4"
+              className="w-20 h-15 mb-4"
             />
             <p className="text-center md:text-left">
                 Thực Tập Nhóm 1
