@@ -8,13 +8,11 @@ import HomePage from "@/pages/TrangBooking/HomePage"; // Thêm import cho trang 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} /> {/* Thêm route cho trang chủ */}
-      <Route path="/dashboard/*" element={<Dashboard />} />
+      <Route path="/dashboard*" element={<Dashboard />} />
       <Route path="/auth/*" element={<Auth />} />
       <Route path="/auth/sign-in" element={<SignIn />} />
       <Route path="/auth/sign-up" element={<SignUp />} />
-      <Route path="/booking" element={<WebPage />} /> {/* Đổi từ /TrangChu sang /booking */}
-      <Route path="*" element={<Navigate to="/" replace />} /> {/* Về trang chủ thay vì dashboard */}
+      <Route path="*" element={<WebPage />} /> {/* Đổi từ /TrangChu sang /booking */}
     </Routes>
   );
 }

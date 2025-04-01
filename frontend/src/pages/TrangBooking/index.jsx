@@ -1,13 +1,14 @@
-import Header from "./Header";
-import HomePage from "./HomePage"; // Đổi từ Content sang HomePage
-
+import HeaderBanner from "./Header";
+import HomePage from "./HomePage";
+import Footer from "./Footer";
 const TrangBooking = () => {
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      <HeaderBanner />
       <main className="pt-20 pb-10">
-        <HomePage /> {/* Thay Content bằng HomePage */}
+        <HomePage />
       </main>
+      <Footer/>
     </div>
   );
 };

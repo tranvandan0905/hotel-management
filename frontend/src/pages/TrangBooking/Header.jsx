@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@material-tailwind/react";
 
-// Tạo danh sách ảnh từ thư mục public
-const images = Array.from({ length: 3 }, (_, i) => `/img/imgBanner/Banner${i + 1}.jpg`);
+// Danh sách ảnh từ thư mục public
+const images = Array.from({ length: 5 }, (_, i) => `/img/imgBanner/banner${i + 1}.png`);
 
 const Header = () => {
   return (
-    <header className="absolute top-0 left-0 w-full flex justify-between items-center p-6 text-white z-10">
+    <header className="fixed top-0 left-0 w-full flex justify-between items-center p-6 text-white bg-black shadow-md z-50">
       <h1 className="text-2xl font-bold tracking-wide flex items-center">
-        <span className="text-gold-500"></span> HOTEL & SPA
+        <span className="text-white">HOTEL Booking</span>
       </h1>
       <nav className="space-x-6 hidden md:flex">
-        <a href="#home" className="hover:text-gold-400">Home</a>
-        <a href="#rooms" className="hover:text-gold-400">Rooms</a>
-        <a href="#spa" className="hover:text-gold-400">Spa</a>
-        <a href="#contact" className="hover:text-gold-400">Contact</a>
+        <a href="#home" className="hover:text-yellow-400">Home</a>
+        <a href="#rooms" className="hover:text-yellow-400">Rooms</a>
+        <a href="#spa" className="hover:text-yellow-400">Spa</a>
+        <a href="#contact" className="hover:text-yellow-400">Contact</a>
       </nav>
     </header>
   );
@@ -23,6 +23,12 @@ const Header = () => {
 const Banner = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
+  const [searchData, setSearchData] = useState({
+    checkIn: "",
+    checkOut: "",
+    adults: 1,
+    children: 0
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -30,14 +36,19 @@ const Banner = () => {
       setTimeout(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
         setIsFading(false);
-      }, 200); // Chuyển ảnh sau 300ms để không bị khựng
-    }, 3000); // Auto chuyển sau 2s
+      }, 200);
+    }, 3000);
     return () => clearInterval(interval);
-  }, []); 
+  }, []);
+
+  const handleSearchChange = (e) => {
+    setSearchData({ ...searchData, [e.target.name]: e.target.value });
+  };
+
   return (
-    <div className="relative h-screen bg-cover bg-center flex items-center justify-center">
+    <div className="relative h-screen bg-cover bg-center flex items-center justify-center mt-16">
       <img
-        key={currentIndex} // Reset nhanh hơn
+        key={currentIndex}
         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
           isFading ? "opacity-0" : "opacity-100"
         }`}
@@ -53,27 +64,70 @@ const Banner = () => {
           See Our Rooms
         </Button>
       </div>
-    </div>
-  );
-};
-const Footer = () => {
-    return (
-      <footer className="bg-gray-900 text-white py-6">
-        <div className="container mx-auto text-center">
-          <p className="text-lg font-semibold">Hotel Booking</p>
-          <p className="text-sm mt-2">© 2025 All rights reserved</p>
+
+      {/* Search Box */}
+      <div className="absolute bottom-10 bg-white p-6 rounded-lg shadow-xl w-11/12 max-w-4xl">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Check In</label>
+            <input
+              type="date"
+              name="checkIn"
+              value={searchData.checkIn}
+              onChange={handleSearchChange}
+              className="w-full p-2 border rounded-md"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Check Out</label>
+            <input
+              type="date"
+              name="checkOut"
+              value={searchData.checkOut}
+              onChange={handleSearchChange}
+              className="w-full p-2 border rounded-md"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Adult</label>
+            <input
+              type="number"
+              name="adults"
+              min="1"
+              value={searchData.adults}
+              onChange={handleSearchChange}
+              className="w-full p-2 border rounded-md"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Children</label>
+            <input
+              type="number"
+              name="children"
+              min="0"
+              value={searchData.children}
+              onChange={handleSearchChange}
+              className="w-full p-2 border rounded-md"
+            />
+          </div>
+          <div className="flex items-end">
+            <Button className="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-3">
+              CHECK NOW
+            </Button>
+          </div>
         </div>
-      </footer>
-    );
-  };
-const HomePage = () => {
-  return (
-    <div>
-      <Header />
-      <Banner />
-      <Footer/>
+      </div>
     </div>
   );
 };
 
-export default HomePage;
+const HeaderBanner = () => {
+  return (
+    <div>
+      <Header />
+      <Banner />
+    </div>
+  );
+};
+
+export default HeaderBanner;
