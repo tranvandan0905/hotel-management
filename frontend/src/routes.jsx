@@ -1,13 +1,12 @@
 import React from "react";
 import Home from "@/pages/dashboard/home";
 import Room from "@/pages/dashboard/room";
-// import Notifications from "@/pages/dashboard/notifications";
-import SignIn from "@/pages/auth/Sign-in";
+import SignIn from "@/pages/auth/sign-in";
 import SignUp from "@/pages/auth/sign-up";
 import AddRoom from "@/pages/dashboard/add-room";
-import EditRoom from "@/pages/dashboard/edit-room"; // Thêm import mới
+import EditRoom from "@/pages/dashboard/edit-room";
 import Users from "@/pages/dashboard/users";
-import AllBooking from "./pages/dashboard/all-booking";
+import AllBooking from "@/pages/dashboard/all-booking";
 
 export const routes = [
   {
@@ -23,11 +22,6 @@ export const routes = [
         element: <Room />,
         name: "Phòng",
       },
-      // {
-      //   name: "Notifications",
-      //   path: "/notifications",
-      //   element: <Notifications />,
-      // },
       {
         name: "Thêm phòng",
         path: "/add-room",
@@ -42,9 +36,9 @@ export const routes = [
       },
       {
         name: "Chỉnh sửa phòng",
-        path: "/edit-room/:id", // Thêm route mới với dynamic parameter
+        path: "/edit-room/:id",
         element: <EditRoom />,
-        hiddenInSidebar: true // Ẩn trong sidebar
+        hiddenInSidebar: true
       },
       {
         name: "Tài khoản người dùng",
@@ -59,12 +53,12 @@ export const routes = [
     pages: [
       {
         name: "Sign In",
-        path: "/auth/sign-in",
+        path: "/sign-in",
         element: <SignIn />,
       },
       {
         name: "Sign Up",
-        path: "/auth/sign-up",
+        path: "/sign-up",
         element: <SignUp />,
       },
     ],
