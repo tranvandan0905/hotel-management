@@ -16,15 +16,16 @@ import { PlusIcon, XMarkIcon, CheckIcon } from "@heroicons/react/24/solid";
 
 const AddRoom = () => {
   const [formData, setFormData] = useState({
-    roomNumber: '',
-    price: '',
-    bedType: 'Giường đôi',
-    floor: '',
-    description: '',
-    status: false,
+    sophong: '',
+    loai: 'Phòng Standard',
+    tang: '',
+    succhua: 2,
+    gia: '',
+    trangthai: false,
     cleaningStatus: 'Đã vệ sinh',
-    amenities: [],
-    images: []
+    id_chinhanh: 1,
+    anh: [],
+    mota: ''
   });
 
   const [imagePreviews, setImagePreviews] = useState([]);
@@ -34,7 +35,7 @@ const AddRoom = () => {
     e.preventDefault();
     console.log('Dữ liệu phòng mới:', formData);
     alert('Thêm phòng thành công!');
-    navigate('/rooms');
+    navigate('/dashboard/rooms');
   };
 
   const handleImageUpload = (e) => {
@@ -43,29 +44,20 @@ const AddRoom = () => {
     
     setFormData({
       ...formData,
-      images: [...formData.images, ...files]
+      anh: [...formData.anh, ...files]
     });
     setImagePreviews([...imagePreviews, ...previews]);
   };
 
   const removeImage = (index) => {
-    const newImages = [...formData.images];
+    const newImages = [...formData.anh];
     const newPreviews = [...imagePreviews];
     
     newImages.splice(index, 1);
     newPreviews.splice(index, 1);
     
-    setFormData({...formData, images: newImages});
+    setFormData({...formData, anh: newImages});
     setImagePreviews(newPreviews);
-  };
-
-  const handleAmenityChange = (amenity) => {
-    setFormData(prev => ({
-      ...prev,
-      amenities: prev.amenities.includes(amenity)
-        ? prev.amenities.filter(a => a !== amenity)
-        : [...prev.amenities, amenity]
-    }));
   };
 
   return (
@@ -136,85 +128,97 @@ const AddRoom = () => {
                 <div>
                   <Typography variant="h5" className="mb-4">Thông Tin Cơ Bản</Typography>
                   
-                  <div className="space-y-4">
+                  <div className="space-y-12">
                     <Input
                       label="Số phòng *"
-                      value={formData.roomNumber}
-                      onChange={(e) => setFormData({...formData, roomNumber: e.target.value})}
-                      required
-                    />
-                    
-                    <Input
-                      label="Giá (/đêm) *"
                       type="number"
-                      value={formData.price}
-                      onChange={(e) => setFormData({...formData, price: e.target.value})}
+                      value={formData.sophong}
+                      onChange={(e) => setFormData({...formData, sophong: e.target.value})}
                       required
-                      icon={<span>VND</span>}
                     />
                     
                     <Select
-                      label="Loại giường *"
-                      value={formData.bedType}
-                      onChange={(value) => setFormData({...formData, bedType: value})}
+                      label="Loại phòng *"
+                      value={formData.loai}
+                      onChange={(value) => setFormData({...formData, loai: value})}
                     >
-                      <Option value="Giường đôi">Giường đôi</Option>
-                      <Option value="Giường đơn">Giường đơn</Option>
-                      <Option value="King Size">King Size</Option>
-                      <Option value="Queen Size">Queen Size</Option>
+                      <Option value="Phòng Standard">Phòng Standard</Option>
+                      <Option value="Phòng Superior">Phòng Superior</Option>
+                      <Option value="Phòng Deluxe">Phòng Deluxe</Option>
+                      <Option value="Phòng Suite">Phòng Suite</Option>
+                      <Option value="Phòng VIP">Phòng VIP</Option>
                     </Select>
                     
                     <Input
                       label="Tầng *"
                       type="number"
-                      value={formData.floor}
-                      onChange={(e) => setFormData({...formData, floor: e.target.value})}
+                      value={formData.tang}
+                      onChange={(e) => setFormData({...formData, tang: e.target.value})}
                       required
                     />
                     
+                    <div className="relative">
+                      <Input
+                        label="Sức chứa *"
+                        type="number"
+                        value={formData.succhua}
+                        onChange={(e) => setFormData({...formData, succhua: e.target.value})}
+                        required
+                        className="pr-12" // Tăng padding để chữ "người" không bị lem
+                        containerProps={{ className: "!min-w-0" }} // Thêm để tránh tràn khung
+                      />
+                      <span className="absolute right-3 bottom-2 text-gray-600 text-sm">
+                        Người
+                      </span>
+                    </div>
+                    
+                    <div className="relative">
+                      <Input
+                        label="Giá phòng (/đêm) *"
+                        type="number"
+                        value={formData.succhua}
+                        onChange={(e) => setFormData({...formData, succhua: e.target.value})}
+                        required
+                        className="pr-12" // Tăng padding để chữ "người" không bị lem
+                        containerProps={{ className: "!min-w-0" }} // Thêm để tránh tràn khung
+                      />
+                      <span className="absolute right-3 bottom-2 text-gray-600 text-sm">
+                        VNĐ
+                      </span>
+                    </div>
+                    
+                    <Select
+                      label="Chi nhánh *"
+                      value={formData.id_chinhanh.toString()}
+                      onChange={(value) => setFormData({...formData, id_chinhanh: parseInt(value)})}
+                    >
+                      <Option value="1">Chi nhánh 1</Option>
+                      <Option value="2">Chi nhánh 2</Option>
+                      <Option value="3">Chi nhánh 3</Option>
+                    </Select>
+                    
                     <Textarea
                       label="Mô tả phòng"
-                      value={formData.description}
-                      onChange={(e) => setFormData({...formData, description: e.target.value})}
-                      rows={4}
+                      value={formData.mota}
+                      onChange={(e) => setFormData({...formData, mota: e.target.value})}
+                      rows={3}
                     />
                   </div>
                 </div>
               </div>
 
-              {/* Cột 2 - Tiện ích và trạng thái */}
+              {/* Cột 2 - Trạng thái */}
               <div>
-                {/* Tiện ích */}
                 <div className="mb-8">
-                  <Typography variant="h5" className="mb-4">Tiện Ích Phòng</Typography>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {[
-                      'Máy lạnh', 'Vòi sen', 'TV LED', 'Wifi', 
-                      'Tủ lạnh', 'Bồn tắm', 'Bàn làm việc', 'Hộp an toàn',
-                      'Bình nước nóng', 'Máy sấy tóc', 'Bàn ủi', 'Minibar'
-                    ].map(item => (
-                      <Checkbox
-                        key={item}
-                        label={item}
-                        checked={formData.amenities.includes(item)}
-                        onChange={() => handleAmenityChange(item)}
-                        containerProps={{ className: "rounded-lg p-2 hover:bg-blue-gray-50" }}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Trạng thái */}
-                <div>
-                  <Typography variant="h5" className="mb-4">Trạng Thái</Typography>
+                  <Typography variant="h5" className="mb-4">Trạng Thái Phòng</Typography>
                   
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     <Switch
-                      checked={formData.status}
-                      onChange={() => setFormData({...formData, status: !formData.status})}
+                      checked={formData.trangthai}
+                      onChange={() => setFormData({...formData, trangthai: !formData.trangthai})}
                       label={
                         <div className="flex items-center gap-2">
-                          {formData.status ? (
+                          {formData.trangthai ? (
                             <>
                               <CheckIcon className="h-4 w-4 text-green-500" />
                               <span>Đã đặt phòng</span>
@@ -238,7 +242,7 @@ const AddRoom = () => {
                           : 'Đã vệ sinh'
                       })}
                       label={
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-x-2"> {/* Thay gap-2 bằng gap-x-2 */}
                           {formData.cleaningStatus === 'Đã vệ sinh' ? (
                             <>
                               <CheckIcon className="h-4 w-4 text-green-500" />
@@ -255,6 +259,25 @@ const AddRoom = () => {
                     />
                   </div>
                 </div>
+
+                {/* Tiện ích (nếu cần bổ sung)
+                <div>
+                  <Typography variant="h5" className="mb-4">Tiện Ích (Tùy chọn)</Typography>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {[
+                      'Máy lạnh', 'TV', 'Wifi', 'Minibar', 
+                      'Bồn tắm', 'Vòi sen', 'Bàn làm việc', 'Tủ lạnh'
+                    ].map(item => (
+                      <Checkbox
+                        key={item}
+                        label={item}
+                        // Xử lý tiện ích nếu cần (có thể thêm vào mota)
+                        onChange={() => {}}
+                        containerProps={{ className: "rounded-lg p-2 hover:bg-blue-gray-50" }}
+                      />
+                    ))}
+                  </div>
+                </div> */}
               </div>
             </div>
 
@@ -262,7 +285,7 @@ const AddRoom = () => {
             <div className="mt-8 flex justify-end gap-4">
               <Button
                 variant="outlined"
-                onClick={() => navigate('/rooms')}
+                onClick={() => navigate('/dashboard/rooms')}
                 className="mr-2"
               >
                 Hủy
