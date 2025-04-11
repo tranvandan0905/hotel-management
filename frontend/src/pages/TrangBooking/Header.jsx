@@ -7,7 +7,7 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 w-full flex justify-between items-center p-4 md:p-6 text-white bg-black shadow-md z-50">
+    <header className="fixed top-0 left-0 w-full flex justify-between items-center p-4 md:p-4 text-white bg-black shadow-md z-50 ">
       <h1 className="text-base md:text-2xl font-bold tracking-wide flex items-center">
         <img
           src="./img/logo_booking_white.png"

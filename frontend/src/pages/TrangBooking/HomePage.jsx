@@ -90,9 +90,9 @@ const HomePage = () => {
       const header = document.querySelector("header");
       if (header) {
         if (window.scrollY > 50) {
-          header.classList.add("bg-gray-900", "shadow-md");
+          header.classList.add("bg-black/80", "shadow-md");
         } else {
-          header.classList.remove("bg-gray-900", "shadow-md");
+          header.classList.remove("bg-black/80", "shadow-md");
         }
       }
     };

@@ -4,43 +4,98 @@ import { Card, Button, Typography, Input, Select, Option } from '@material-tailw
 
 const AllBooking = () => {
   const initialBookings = [
-    { id: 1, name: "John Deo", checkIn: "2019-08-12", checkOut: "2019-08-15", status: "Paid", phone: "(123)123456", roomType: "Single", image: "https://randomuser.me/api/portraits/women/1.jpg" },
-    { id: 2, name: "Jens Brincker", checkIn: "2019-08-13", checkOut: "2019-08-16", status: "Unpaid", phone: "(123)123456", roomType: "Double", image: "https://randomuser.me/api/portraits/men/2.jpg" },
-    { id: 3, name: "Mark Hay", checkIn: "2019-08-15", checkOut: "2019-08-18", status: "Paid", phone: "(123)123456", roomType: "Single", image: "https://randomuser.me/api/portraits/women/3.jpg" },
-    { id: 4, name: "Anthony Davie", checkIn: "2019-08-16", checkOut: "2019-08-17", status: "Unpaid", phone: "(123)123456", roomType: "King", image: "https://randomuser.me/api/portraits/women/4.jpg" },
-    { id: 5, name: "Alan Gilchrist", checkIn: "2019-08-21", checkOut: "2019-08-23", status: "Paid", phone: "(123)123456", roomType: "Queen", image: "https://randomuser.me/api/portraits/women/5.jpg" },
-    { id: 6, name: "Sue Woodger", checkIn: "2019-08-25", checkOut: "2019-08-26", status: "Pending", phone: "(123)123456", roomType: "Single", image: "https://randomuser.me/api/portraits/men/6.jpg" },
-    { id: 7, name: "David Perry", checkIn: "2019-08-26", checkOut: "2019-08-29", status: "Unpaid", phone: "(123)123456", roomType: "Single", image: "https://randomuser.me/api/portraits/women/7.jpg" },
-    { id: 8, name: "Sneha Pandit", checkIn: "2019-08-27", checkOut: "2019-08-28", status: "Paid", phone: "(123)123456", roomType: "Double", image: "https://randomuser.me/api/portraits/women/8.jpg" },
-    { id: 9, name: "Robert Smith", checkIn: "2019-09-01", checkOut: "2019-09-05", status: "Paid", phone: "(456)789123", roomType: "King", image: "https://randomuser.me/api/portraits/men/9.jpg" },
-    { id: 10, name: "Alice Johnson", checkIn: "2019-09-03", checkOut: "2019-09-07", status: "Pending", phone: "(987)654321", roomType: "Queen", image: "https://randomuser.me/api/portraits/women/10.jpg" },
-    { id: 11, name: "Michael Brown", checkIn: "2019-09-10", checkOut: "2019-09-15", status: "Unpaid", phone: "(321)456789", roomType: "Single", image: "https://randomuser.me/api/portraits/men/11.jpg" },
-    { id: 12, name: "Emma Wilson", checkIn: "2019-09-12", checkOut: "2019-09-14", status: "Paid", phone: "(111)222333", roomType: "Double", image: "https://randomuser.me/api/portraits/women/12.jpg" },
-    { id: 13, name: "William Taylor", checkIn: "2019-09-18", checkOut: "2019-09-20", status: "Pending", phone: "(444)555666", roomType: "King", image: "https://randomuser.me/api/portraits/men/13.jpg" },
-    { id: 14, name: "Olivia Martinez", checkIn: "2019-09-22", checkOut: "2019-09-25", status: "Unpaid", phone: "(777)888999", roomType: "Queen", image: "https://randomuser.me/api/portraits/women/14.jpg" },
-    { id: 15, name: "Daniel Garcia", checkIn: "2019-09-28", checkOut: "2019-09-30", status: "Paid", phone: "(123)987654", roomType: "Single", image: "https://randomuser.me/api/portraits/men/15.jpg" },
+    {
+      id: 1,
+      hoTen: "Nguyễn Văn A",
+      sdt: "0123456789",
+      email: "a@example.com",
+      gioiTinh: "Nam",
+      ngayNhan: "2025-04-15",
+      ngayTra: "2025-04-17",
+      soNguoi: 2,
+      tongTien: 1500000,
+      phong: "P101",
+    },
+    {
+      id: 2,
+      hoTen: "Trần Thị B",
+      sdt: "0987654321",
+      email: "b@example.com",
+      gioiTinh: "Nữ",
+      ngayNhan: "2025-04-16",
+      ngayTra: "2025-04-18",
+      soNguoi: 4,
+      tongTien: 2500000,
+      phong: "P202",
+    },
+    {
+      id: 3, hoTen: "Lê Hoàng", sdt: "0934567890", email: "c@example.com", gioiTinh: "Nam", ngayNhan: "2025-04-10", ngayTra: "2025-04-12", soNguoi: 3, tongTien: 1800000, phong: "P303",
+    },
+    {
+      id: 4, hoTen: "Phạm Mai", sdt: "0923456789", email: "d@example.com", gioiTinh: "Nữ", ngayNhan: "2025-04-11", ngayTra: "2025-04-13", soNguoi: 2, tongTien: 1600000, phong: "P404",
+    },
+    {
+      id: 5, hoTen: "Đỗ Khánh", sdt: "0912345678", email: "e@example.com", gioiTinh: "Nam", ngayNhan: "2025-04-12", ngayTra: "2025-04-14", soNguoi: 1, tongTien: 1000000, phong: "P105",
+    },
+    {
+      id: 6, hoTen: "Ngô Thảo", sdt: "0901234567", email: "f@example.com", gioiTinh: "Nữ", ngayNhan: "2025-04-14", ngayTra: "2025-04-16", soNguoi: 2, tongTien: 1300000, phong: "P106",
+    },
+    {
+      id: 7, hoTen: "Trịnh Duy", sdt: "0976543210", email: "g@example.com", gioiTinh: "Nam", ngayNhan: "2025-04-13", ngayTra: "2025-04-15", soNguoi: 3, tongTien: 1700000, phong: "P107",
+    },
+    {
+      id: 8, hoTen: "Lý Hân", sdt: "0965432109", email: "h@example.com", gioiTinh: "Nữ", ngayNhan: "2025-04-15", ngayTra: "2025-04-18", soNguoi: 2, tongTien: 1400000, phong: "P108",
+    },
+    {
+      id: 9, hoTen: "Tống Bình", sdt: "0954321098", email: "i@example.com", gioiTinh: "Nam", ngayNhan: "2025-04-16", ngayTra: "2025-04-19", soNguoi: 2, tongTien: 1500000, phong: "P109",
+    },
+    {
+      id: 10, hoTen: "Mai Trang", sdt: "0943210987", email: "j@example.com", gioiTinh: "Nữ", ngayNhan: "2025-04-17", ngayTra: "2025-04-20", soNguoi: 1, tongTien: 1100000, phong: "P110",
+    },
+    {
+      id: 11, hoTen: "Bùi Phúc", sdt: "0932109876", email: "k@example.com", gioiTinh: "Nam", ngayNhan: "2025-04-18", ngayTra: "2025-04-21", soNguoi: 2, tongTien: 1400000, phong: "P111",
+    },
+    {
+      id: 12, hoTen: "Hồ Yến", sdt: "0921098765", email: "l@example.com", gioiTinh: "Nữ", ngayNhan: "2025-04-19", ngayTra: "2025-04-22", soNguoi: 3, tongTien: 1700000, phong: "P112",
+    },
+    {
+      id: 13, hoTen: "Vũ Thành", sdt: "0910987654", email: "m@example.com", gioiTinh: "Nam", ngayNhan: "2025-04-20", ngayTra: "2025-04-23", soNguoi: 1, tongTien: 1200000, phong: "P113",
+    },
+    {
+      id: 14, hoTen: "Trần Tín", sdt: "0909876543", email: "n@example.com", gioiTinh: "Nam", ngayNhan: "2025-04-21", ngayTra: "2025-04-24", soNguoi: 4, tongTien: 2500000, phong: "P114",
+    },
+    {
+      id: 15, hoTen: "Nguyễn Hà", sdt: "0898765432", email: "o@example.com", gioiTinh: "Nữ", ngayNhan: "2025-04-22", ngayTra: "2025-04-25", soNguoi: 2, tongTien: 1500000, phong: "P115",
+    },
   ];
 
-  const [allBookings, setAllBookings] = useState(initialBookings);
+  const [bookings, setBookings] = useState(initialBookings);
   const [currentPage, setCurrentPage] = useState(1);
-  const [form, setForm] = useState({ id: null, name: '', checkIn: '', checkOut: '', status: '', phone: '', roomType: '' });
   const [isEditing, setIsEditing] = useState(false);
+  const [form, setForm] = useState({
+    id: null,
+    hoTen: "",
+    sdt: "",
+    email: "",
+    gioiTinh: "",
+    ngayNhan: "",
+    ngayTra: "",
+    soNguoi: 1,
+    tongTien: 0,
+    phong: "",
+  });
 
   const itemsPerPage = 10;
-  const totalPages = useMemo(() => Math.ceil(allBookings.length / itemsPerPage), [allBookings]);
-  const currentBookings = useMemo(() => allBookings.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage), [allBookings, currentPage, itemsPerPage]);
+  const totalPages = useMemo(() => Math.ceil(bookings.length / itemsPerPage), [bookings]);
+  const currentBookings = useMemo(() =>
+    bookings.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage), [bookings, currentPage]);
 
-  const getStatusClass = (status) => {
-    const statusColors = {
-      Paid: "bg-green-100 text-green-600",
-      Unpaid: "bg-red-100 text-red-600",
-      Pending: "bg-yellow-100 text-yellow-600",
-    };
-    return statusColors[status] || "bg-gray-100 text-gray-600";
-  };
-
-  const handleDelete = (id) => {
-    setAllBookings(prev => prev.filter(booking => booking.id !== id));
+  const handleAdd = () => {
+    setForm({
+      id: null, hoTen: "", sdt: "", email: "", gioiTinh: "",
+      ngayNhan: "", ngayTra: "", soNguoi: 1, tongTien: 0, phong: ""
+    });
+    setIsEditing(true);
   };
 
   const handleEdit = (booking) => {
@@ -48,122 +103,107 @@ const AllBooking = () => {
     setIsEditing(true);
   };
 
-  const handleAdd = () => {
-    setForm({ id: null, name: '', checkIn: '', checkOut: '', status: '', phone: '', roomType: '' });
-    setIsEditing(true);
+  const handleDelete = (id) => {
+    setBookings(prev => prev.filter(b => b.id !== id));
   };
 
   const handleSubmit = () => {
-    if (!form.name || !form.checkIn || !form.checkOut || !form.status || !form.phone || !form.roomType) {
-      alert("Vui lòng nhập đầy đủ thông tin");
-      return;
-    }
-    if (new Date(form.checkIn) >= new Date(form.checkOut)) {
-      alert("Ngày check-in phải trước ngày check-out");
-      return;
-    }
+    const isValid = form.hoTen && form.sdt && form.email && form.ngayNhan && form.ngayTra && form.gioiTinh && form.phong;
+    if (!isValid) return alert("Vui lòng nhập đầy đủ thông tin");
+    if (new Date(form.ngayNhan) >= new Date(form.ngayTra)) return alert("Ngày nhận phải trước ngày trả");
 
-    setAllBookings(prev => {
-      if (form.id) {
-        return prev.map(booking => booking.id === form.id ? form : booking);
-      }
-      return [...prev, { ...form, id: prev.length + 1, image: "https://randomuser.me/api/portraits/lego/5.jpg" }];
+    setBookings(prev => {
+      if (form.id) return prev.map(b => b.id === form.id ? form : b);
+      return [...prev, { ...form, id: prev.length + 1 }];
     });
 
     setIsEditing(false);
   };
 
   return (
-    <div className="mt-8">
+    <div className="mt-8 px-2 md:px-6">
       <Card className="p-4 shadow-sm">
-        <div className="flex justify-between items-center mb-4">
-          <Typography variant="h6">Booking Details</Typography>
-          <Button color="blue" onClick={handleAdd}>
+        <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
+          <Typography variant="h6">Danh sách đặt lịch</Typography>
+          <Button onClick={handleAdd}>
             <PlusIcon className="h-5 w-5 inline-block mr-2" />
-            Add Booking
+            Thêm đặt lịch
           </Button>
         </div>
 
         {isEditing && (
-          <div className="p-4 border rounded mb-4">
-            <Input label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-            <Input type="date" label="Check In" value={form.checkIn} onChange={(e) => setForm({ ...form, checkIn: e.target.value })} />
-            <Input type="date" label="Check Out" value={form.checkOut} onChange={(e) => setForm({ ...form, checkOut: e.target.value })} />
-            <Input label="Phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-            <Select label="Status" value={form.status} onChange={(val) => setForm({ ...form, status: val })}>
-              <Option value="Paid">Paid</Option>
-              <Option value="Unpaid">Unpaid</Option>
-              <Option value="Pending">Pending</Option>
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 bg-gray-100 p-4 rounded">
+            <Input label="Họ tên" value={form.hoTen} onChange={(e) => setForm({ ...form, hoTen: e.target.value })} />
+            <Input label="SĐT" value={form.sdt} onChange={(e) => setForm({ ...form, sdt: e.target.value })} />
+            <Input label="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+            <Select label="Giới tính" value={form.gioiTinh} onChange={(val) => setForm({ ...form, gioiTinh: val })}>
+              <Option value="Nam">Nam</Option>
+              <Option value="Nữ">Nữ</Option>
+              <Option value="Khác">Khác</Option>
             </Select>
-            <Select label="Room Type" value={form.roomType} onChange={(val) => setForm({ ...form, roomType: val })}>
-              <Option value="Single">Single</Option>
-              <Option value="Double">Double</Option>
-              <Option value="King">King</Option>
-              <Option value="Queen">Queen</Option>
-            </Select>
-            <Button color="green" onClick={handleSubmit} className="mt-2">Save</Button>
-            <Button color="red" onClick={() => setIsEditing(false)} className="mt-2 ml-2">Cancel</Button>
+            <Input type="date" label="Ngày nhận" value={form.ngayNhan} onChange={(e) => setForm({ ...form, ngayNhan: e.target.value })} />
+            <Input type="date" label="Ngày trả" value={form.ngayTra} onChange={(e) => setForm({ ...form, ngayTra: e.target.value })} />
+            <Input type="number" label="Số người" value={form.soNguoi} onChange={(e) => setForm({ ...form, soNguoi: Number(e.target.value) })} />
+            <Input type="number" label="Tổng tiền" value={form.tongTien} onChange={(e) => setForm({ ...form, tongTien: Number(e.target.value) })} />
+            <Input label="Phòng (số phòng)" value={form.phong} onChange={(e) => setForm({ ...form, phong: e.target.value })} />
+            <div className="col-span-1 sm:col-span-2 flex gap-2 mt-2">
+              <Button color="green" onClick={handleSubmit}>Lưu</Button>
+              <Button color="red" onClick={() => setIsEditing(false)}>Hủy</Button>
+            </div>
           </div>
         )}
 
-        <table className="w-full mt-4 border">
-          <thead>
-            <tr className="text-left text-gray-500 bg-gray-100">
-              <th className="p-2">#</th>
-              <th className="p-2">Name</th>
-              <th className="p-2">Check In</th>
-              <th className="p-2">Check Out</th>
-              <th className="p-2">Status</th>
-              <th className="p-2">Phone</th>
-              <th className="p-2">Room Type</th>
-              <th className="p-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentBookings.map((booking, index) => (
-              <tr key={booking.id} className="border-t">
-                <td className="p-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                <td className="p-3 flex items-center gap-2">
-                  <img src={booking.image} alt={booking.name} className="w-8 h-8 rounded-full" />
-                  {booking.name}
-                </td>
-                <td className="p-2">{booking.checkIn}</td>
-                <td className="p-2">{booking.checkOut}</td>
-                <td className={`p-2 ${getStatusClass(booking.status)}`}>{booking.status}</td>
-                <td className="p-2">{booking.phone}</td>
-                <td className="p-2">{booking.roomType}</td>
-                <td className="p-2 flex space-x-2">
-                  <button onClick={() => handleEdit(booking)} className="text-blue-500 hover:text-blue-700">
-                    <PencilSquareIcon className="h-6 w-6" />
-                  </button>
-                  <button onClick={() => handleDelete(booking.id)} className="text-red-500 hover:text-red-700">
-                    <TrashIcon className="h-6 w-6" />
-                  </button>
-                </td>
+        <div className="overflow-x-auto mt-4">
+          <table className="w-full text-sm border">
+            <thead className="bg-gray-200 text-gray-700">
+              <tr>
+                <th className="p-2">#</th>
+                <th className="p-2">Họ tên</th>
+                <th className="p-2">SĐT</th>
+                <th className="p-2">Email</th>
+                <th className="p-2">Giới tính</th>
+                <th className="p-2">Nhận</th>
+                <th className="p-2">Trả</th>
+                <th className="p-2">Số người</th>
+                <th className="p-2">Tổng tiền</th>
+                <th className="p-2">Phòng</th>
+                <th className="p-2">Thao tác</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        {/* Điều hướng trang */}
-       <div className="mt-4 flex justify-center gap-4">
-         <Button 
-           onClick={() => setCurrentPage(currentPage - 1)}
-           disabled={currentPage === 1}
-         >
-           Trang trước
-         </Button>
+            </thead>
+            <tbody>
+              {currentBookings.map((b, index) => (
+                <tr key={b.id} className="border-t text-center">
+                  <td className="p-2 align-middle">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                  <td className="p-2 align-middle">{b.hoTen}</td>
+                  <td className="p-2 align-middle">{b.sdt}</td>
+                  <td className="p-2 align-middle">{b.email}</td>
+                  <td className="p-2 align-middle">{b.gioiTinh}</td>
+                  <td className="p-2 align-middle">{b.ngayNhan}</td>
+                  <td className="p-2 align-middle">{b.ngayTra}</td>
+                  <td className="p-2 align-middle">{b.soNguoi}</td>
+                  <td className="p-2 align-middle">{b.tongTien.toLocaleString()}đ</td>
+                  <td className="p-2 align-middle">{b.phong}</td>
+                  <td className="p-2 align-middle">
+                    <div className="flex justify-center items-center gap-2">
+                      <button onClick={() => handleEdit(b)} className="text-blue-600 hover:underline">
+                        <PencilSquareIcon className="w-5 h-5" />
+                      </button>
+                      <button onClick={() => handleDelete(b.id)} className="text-red-600 hover:underline">
+                        <TrashIcon className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-         <span>
-           Trang {currentPage} / {totalPages}
-         </span>
-
-         <Button 
-           onClick={() => setCurrentPage(currentPage + 1)}
-           disabled={currentPage === totalPages}
-         >
-           Trang sau
-         </Button>
-       </div>
+        <div className="flex justify-center items-center gap-4 mt-4 flex-wrap">
+          <Button disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)}>Trang trước</Button>
+          <span>Trang {currentPage} / {totalPages}</span>
+          <Button disabled={currentPage === totalPages} onClick={() => setCurrentPage((p) => p + 1)}>Trang sau</Button>
+        </div>
       </Card>
     </div>
   );
