@@ -5,8 +5,9 @@ import SignIn from "@/pages/auth/sign-in";
 import SignUp from "@/pages/auth/sign-up";
 import AddRoom from "@/pages/dashboard/add-room";
 import EditRoom from "@/pages/dashboard/edit-room";
-import Users from "@/pages/dashboard/users";
 import AllBooking from "@/pages/dashboard/all-booking";
+import Staff from "@/pages/dashboard/staffs";
+import Users from "./pages/dashboard/users";
 
 export const routes = [
   {
@@ -29,7 +30,7 @@ export const routes = [
         hiddenInSidebar: true
       },
       {
-        name: "Booking",
+        name: "Đặt phòng",
         path: "/all-booking",
         element: <AllBooking />,
         hiddenInSidebar: true
@@ -41,7 +42,12 @@ export const routes = [
         hiddenInSidebar: true
       },
       {
-        name: "Tài khoản người dùng",
+        name: "Tài khoản nhân viên",
+        path: "/staffs",
+        element: <Staff />,
+      },
+      {
+        name: "Tài khoản khách hàng",
         path: "/users",
         element: <Users />,
       }

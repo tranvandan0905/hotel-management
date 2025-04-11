@@ -1,102 +1,190 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
+  MagnifyingGlassIcon,
   PencilIcon,
   TrashIcon,
+  FunnelIcon,
   CheckIcon,
-  XMarkIcon,
-  MagnifyingGlassIcon
+  XMarkIcon
 } from '@heroicons/react/24/outline';
 
-const chiNhanhOptions = [
-  { id: "CN01", ten: "Chi nhánh Quận 1" },
-  { id: "CN02", ten: "Chi nhánh Thủ Đức" },
-  { id: "CN03", ten: "Chi nhánh Gò Vấp" },
-  { id: "CN04", ten: "Chi nhánh Bình Thạnh" }
-];
-
-const viTriOptions = [
-  { id: "VT01", ten: "Lễ tân" },
-  { id: "VT02", ten: "Quản lý" },
-  { id: "VT03", ten: "Phục vụ" },
-  { id: "VT04", ten: "Bảo vệ" }
-];
-
 const Users = () => {
-  const [users, setUsers] = useState(Array.from({ length: 20 }, (_, i) => ({
-    id: i + 1,
-    hoTen: `Nhân viên ${i + 1}`,
-    sdt: `09000000${i}`,
-    cccd: `1234567890${i}`,
-    gioiTinh: i % 2 === 0 ? "Nam" : "Nữ",
-    email: `user${i + 1}@example.com`,
-    password: "******",
-    luong: 10000000 + i * 1000000,
-    id_chinhanh: chiNhanhOptions[i % chiNhanhOptions.length].id,
-    id_vitri: viTriOptions[i % viTriOptions.length].id
-  })));
+  // State quản lý bộ lọc và sắp xếp
+  const [filters, setFilters] = useState({
+    search: '',
+    sortBy: 'hoten'
+  });
 
+  // State quản lý chế độ chỉnh sửa
   const [editingId, setEditingId] = useState(null);
-  const [form, setForm] = useState({});
-  const [filters, setFilters] = useState({ search: '', sortBy: 'hoTen' });
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [editFormData, setEditFormData] = useState({
+    hoten: '',
+    email: '',
+    sdt: '',
+    cccd: '',
+    gioitinh: true
+  });
 
-  const handleEdit = (user) => {
-    setEditingId(user.id);
-    setForm(user);
-  };
+  // State quản lý loading và error
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
-  };
+  // State quản lý danh sách khách hàng
+  const [users, setUsers] = useState([]);
 
-  const handleSave = () => {
-    setUsers(users.map(u => u.id === editingId ? form : u));
-    setEditingId(null);
-  };
+  // Giả lập API fetch - sau này sẽ thay bằng API thực
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setIsLoading(true);
+        // Giả lập API call
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        const mockUsers = [
+          {
+            id: 1,
+            hoten: "Nguyễn Văn A",
+            email: "nguyenvana@email.com",
+            sdt: "0987654321",
+            cccd: "123456789012",
+            gioitinh: true,
+            password: "hashedpassword123"
+          },
+          {
+            id: 2,
+            hoten: "Trần Thị B",
+            email: "tranthib@email.com",
+            sdt: "0912345678",
+            cccd: "987654321098",
+            gioitinh: false,
+            password: "hashedpassword456"
+          },
+          {
+            id: 3,
+            hoten: "Lê Văn C",
+            email: "levanc@email.com",
+            sdt: "0967891234",
+            cccd: "456789012345",
+            gioitinh: true,
+            password: "hashedpassword789"
+          }
+        ];
+        
+        setUsers(mockUsers);
+        setError(null);
+      } catch (err) {
+        setError('Không thể tải dữ liệu khách hàng');
+        console.error('Error fetching users:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const handleCancel = () => setEditingId(null);
+    fetchUsers();
+  }, []);
 
-  const handleDelete = (id) => {
-    if (window.confirm("Bạn có chắc muốn xoá nhân viên này?")) {
-      setUsers(users.filter(u => u.id !== id));
-    }
-  };
-
+  // Hàm xử lý lọc và sắp xếp
   const processedUsers = users
     .filter(user => {
       const searchTerm = filters.search.toLowerCase();
       return (
-        user.hoTen.toLowerCase().includes(searchTerm) ||
+        user.hoten.toLowerCase().includes(searchTerm) ||
         user.email.toLowerCase().includes(searchTerm) ||
-        user.sdt.includes(filters.search)
+        user.sdt.includes(filters.search) ||
+        user.cccd.includes(filters.search)
       );
     })
     .sort((a, b) => {
       switch (filters.sortBy) {
-        case 'hoTen':
-          return a.hoTen.localeCompare(b.hoTen);
+        case 'hoten':
+          return a.hoten.localeCompare(b.hoten);
         case 'email':
           return a.email.localeCompare(b.email);
         case 'sdt':
           return a.sdt.localeCompare(b.sdt);
-        case 'chinhanh':
-          return a.sdt.localeCompare(b.id_chinhanh);
-        case 'vitri':
-          return a.sdt.localeCompare(b.id_vitri);
         default:
           return 0;
       }
     });
 
-  const paginatedUsers = processedUsers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-  const totalPages = Math.ceil(processedUsers.length / itemsPerPage);
+  // Hàm bắt đầu chế độ chỉnh sửa
+  const handleEditClick = (user) => {
+    setEditingId(user.id);
+    setEditFormData({
+      hoten: user.hoten,
+      email: user.email,
+      sdt: user.sdt,
+      cccd: user.cccd,
+      gioitinh: user.gioitinh
+    });
+  };
+
+  // Hàm xử lý thay đổi dữ liệu khi chỉnh sửa
+  const handleEditFormChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setEditFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  // Hàm lưu thay đổi - sau này sẽ thay bằng API call
+  const handleSaveClick = async () => {
+    try {
+      // Giả lập API call
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      setUsers(users.map(user => 
+        user.id === editingId ? { ...user, ...editFormData } : user
+      ));
+      setEditingId(null);
+    } catch (err) {
+      console.error('Error saving user:', err);
+      alert('Có lỗi khi lưu thông tin khách hàng');
+    }
+  };
+
+  // Hàm hủy bỏ chỉnh sửa
+  const handleCancelClick = () => {
+    setEditingId(null);
+  };
+
+  // Hàm xóa user - sau này sẽ thay bằng API call
+  const handleDeleteClick = async (userId) => {
+    if (window.confirm('Bạn có chắc chắn muốn xóa khách hàng này?')) {
+      try {
+        // Giả lập API call
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        setUsers(users.filter(user => user.id !== userId));
+      } catch (err) {
+        console.error('Error deleting user:', err);
+        alert('Có lỗi khi xóa khách hàng');
+      }
+    }
+  };
+
+  // Hiển thị loading hoặc error nếu có
+  if (isLoading) return <div className="p-4 text-center">Đang tải dữ liệu...</div>;
+  if (error) return <div className="p-4 text-center text-red-500">{error}</div>;
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4 text-gray-800">Quản Lý Nhân Viên</h1>
+      {/* Phần header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">Quản Lý Khách Hàng</h1>
+          <p className="text-sm text-gray-600">Quản lý thông tin khách hàng trong hệ thống</p>
+        </div>
+        <div className="flex gap-2">
+          <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+            <FunnelIcon className="h-5 w-5" />
+            Lọc
+          </button>
+        </div>
+      </div>
 
+      {/* Phần bộ lọc và tìm kiếm */}
       <div className="bg-white rounded-lg shadow p-4 mb-6">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
@@ -106,106 +194,170 @@ const Users = () => {
               </div>
               <input
                 type="text"
-                placeholder="Tìm kiếm theo tên, email hoặc số điện thoại..."
-                className="pl-10 w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                placeholder="Tìm kiếm theo tên, email, số điện thoại hoặc CCCD..."
+                className="pl-10 w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 value={filters.search}
-                onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+                onChange={(e) => setFilters({...filters, search: e.target.value})}
               />
             </div>
           </div>
           <select
-            className="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            className="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             value={filters.sortBy}
-            onChange={(e) => setFilters({ ...filters, sortBy: e.target.value })}
+            onChange={(e) => setFilters({...filters, sortBy: e.target.value})}
           >
-            <option value="hoTen">Sắp xếp theo Tên</option>
+            <option value="hoten">Sắp xếp theo Họ tên</option>
             <option value="email">Sắp xếp theo Email</option>
-            <option value="sdt">Sắp xếp theo SĐT</option>
-            <option value="chinhanh">Sắp xếp theo Chi Nhánh</option>
-            <option value="vitri">Sắp xếp theo Vị Trí</option>
+            <option value="sdt">Sắp xếp theo Số Điện Thoại</option>
           </select>
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border rounded shadow text-sm">
-          <thead className="bg-gray-100">
-            <tr>
-              {['Họ tên', 'SĐT', 'CCCD', 'Giới tính', 'Email', 'Lương', 'Chi nhánh', 'Vị trí', 'Thao tác'].map(col => (
-                <th key={col} className="p-3 text-left font-semibold text-gray-700 whitespace-nowrap">{col}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedUsers.map(user => (
-              <tr key={user.id} className="border-t hover:bg-gray-50">
-                {editingId === user.id ? (
-                  <>
-                    <td className="p-2"><input name="hoTen" value={form.hoTen} onChange={handleChange} className="w-full border rounded px-2 py-1 text-sm" /></td>
-                    <td className="p-2"><input name="sdt" value={form.sdt} onChange={handleChange} className="w-full border rounded px-2 py-1 text-sm" /></td>
-                    <td className="p-2"><input name="cccd" value={form.cccd} onChange={handleChange} className="w-full border rounded px-2 py-1 text-sm" /></td>
-                    <td className="p-2">
-                      <select name="gioiTinh" value={form.gioiTinh} onChange={handleChange} className="w-full border rounded px-2 py-1 text-sm">
-                        <option>Nam</option><option>Nữ</option><option>Khác</option>
-                      </select>
-                    </td>
-                    <td className="p-2"><input name="email" value={form.email} onChange={handleChange} className="w-full border rounded px-2 py-1 text-sm" /></td>
-                    <td className="p-2"><input name="luong" value={form.luong} onChange={handleChange} type="number" className="w-full border rounded px-2 py-1 text-sm" /></td>
-                    <td className="p-2">
-                      <select name="id_chinhanh" value={form.id_chinhanh} onChange={handleChange} className="w-full border rounded px-2 py-1 text-sm">
-                        {chiNhanhOptions.map(cn => <option key={cn.id} value={cn.id}>{cn.ten}</option>)}
-                      </select>
-                    </td>
-                    <td className="p-2">
-                      <select name="id_vitri" value={form.id_vitri} onChange={handleChange} className="w-full border rounded px-2 py-1 text-sm">
-                        {viTriOptions.map(vt => <option key={vt.id} value={vt.id}>{vt.ten}</option>)}
-                      </select>
-                    </td>
-                    <td className="p-2 flex gap-2">
-                      <button onClick={handleSave} className="text-green-600"><CheckIcon className="w-5 h-5" /></button>
-                      <button onClick={handleCancel} className="text-red-600"><XMarkIcon className="w-5 h-5" /></button>
-                    </td>
-                  </>
-                ) : (
-                  <>
-                    <td className="p-2 align-middle whitespace-nowrap">{user.hoTen}</td>
-                    <td className="p-2 align-middle whitespace-nowrap">{user.sdt}</td>
-                    <td className="p-2 align-middle whitespace-nowrap">{user.cccd}</td>
-                    <td className="p-2 align-middle whitespace-nowrap">{user.gioiTinh}</td>
-                    <td className="p-2 align-middle whitespace-nowrap">{user.email}</td>
-                    <td className="p-2 align-middle whitespace-nowrap">{user.luong.toLocaleString()}đ</td>
-                    <td className="p-2 align-middle whitespace-nowrap">{chiNhanhOptions.find(cn => cn.id === user.id_chinhanh)?.ten}</td>
-                    <td className="p-2 align-middle whitespace-nowrap">{viTriOptions.find(vt => vt.id === user.id_vitri)?.ten}</td>
-                    <td className="p-2 flex gap-2">
-                      <button onClick={() => handleEdit(user)} className="text-blue-600"><PencilIcon className="w-5 h-5" /></button>
-                      <button onClick={() => handleDelete(user.id)} className="text-red-600"><TrashIcon className="w-5 h-5" /></button>
-                    </td>
-                  </>
-                )}
+      {/* Bảng dữ liệu khách hàng */}
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Họ tên</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Số ĐT</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CCCD</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Giới tính</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thao Tác</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="flex justify-center items-center gap-4 mt-4">
-        <button
-          onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
-          disabled={currentPage === 1}
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50"
-        >
-          Trang trước
-        </button>
-        <span className="text-sm">
-          Trang {currentPage} / {totalPages}
-        </span>
-        <button
-          onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50"
-        >
-          Trang sau
-        </button>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {processedUsers.map((user) => (
+                <tr key={user.id} className="hover:bg-gray-50">
+                  {/* Cột Họ tên */}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {editingId === user.id ? (
+                      <input
+                        type="text"
+                        name="hoten"
+                        value={editFormData.hoten}
+                        onChange={handleEditFormChange}
+                        className="border rounded p-1 w-full"
+                        required
+                      />
+                    ) : (
+                      <div className="text-sm font-medium text-gray-900">{user.hoten}</div>
+                    )}
+                  </td>
+                  
+                  {/* Cột Email */}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {editingId === user.id ? (
+                      <input
+                        type="email"
+                        name="email"
+                        value={editFormData.email}
+                        onChange={handleEditFormChange}
+                        className="border rounded p-1 w-full"
+                        required
+                      />
+                    ) : (
+                      <div className="text-sm text-gray-500">{user.email}</div>
+                    )}
+                  </td>
+                  
+                  {/* Cột Số Điện Thoại */}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {editingId === user.id ? (
+                      <input
+                        type="tel"
+                        name="sdt"
+                        value={editFormData.sdt}
+                        onChange={handleEditFormChange}
+                        className="border rounded p-1 w-full"
+                        required
+                      />
+                    ) : (
+                      <div className="text-sm text-gray-500">{user.sdt}</div>
+                    )}
+                  </td>
+                  
+                  {/* Cột CCCD */}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {editingId === user.id ? (
+                      <input
+                        type="text"
+                        name="cccd"
+                        value={editFormData.cccd}
+                        onChange={handleEditFormChange}
+                        className="border rounded p-1 w-full"
+                        required
+                      />
+                    ) : (
+                      <div className="text-sm text-gray-500">{user.cccd}</div>
+                    )}
+                  </td>
+                  
+                  {/* Cột Giới tính */}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {editingId === user.id ? (
+                      <select
+                        name="gioitinh"
+                        value={editFormData.gioitinh ? 'true' : 'false'}
+                        onChange={handleEditFormChange}
+                        className="border rounded p-1 w-full"
+                      >
+                        <option value="true">Nam</option>
+                        <option value="false">Nữ</option>
+                      </select>
+                    ) : (
+                      <div className="text-sm text-gray-500">
+                        {user.gioitinh ? 'Nam' : 'Nữ'}
+                      </div>
+                    )}
+                  </td>
+                  
+                  {/* Cột Thao Tác */}
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div className="flex gap-2">
+                      {editingId === user.id ? (
+                        <>
+                          <button 
+                            onClick={handleSaveClick}
+                            className="text-green-600 hover:text-green-900"
+                            title="Lưu"
+                          >
+                            <CheckIcon className="h-5 w-5" />
+                          </button>
+                          <button 
+                            onClick={handleCancelClick}
+                            className="text-red-600 hover:text-red-900"
+                            title="Hủy"
+                          >
+                            <XMarkIcon className="h-5 w-5" />
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button 
+                            onClick={() => handleEditClick(user)}
+                            className="text-blue-600 hover:text-blue-900"
+                            title="Chỉnh sửa"
+                          >
+                            <PencilIcon className="h-5 w-5" />
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteClick(user.id)}
+                            className="text-red-600 hover:text-red-900"
+                            title="Xóa"
+                          >
+                            <TrashIcon className="h-5 w-5" />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
