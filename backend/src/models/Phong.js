@@ -1,6 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../database");
-const ChiNhanh = require("./Chinhanh");
+const sequelize = require("../database/database");
 
 const Phong = sequelize.define(
   "Phong",
@@ -9,13 +8,11 @@ const Phong = sequelize.define(
     SoPhong: { type: DataTypes.INTEGER, allowNull: false },
     Loai: { type: DataTypes.STRING, allowNull: false },
     Tang: { type: DataTypes.INTEGER, allowNull: false },
-    SucChua: { type: DataTypes.INTEGER, allowNull: false },
     Gia: { type: DataTypes.INTEGER, allowNull: false },
     TrangThai: { type: DataTypes.BOOLEAN, allowNull: false },
+    HinhAnh: { type: DataTypes.STRING, allowNull: true },
   },
   { tableName: "phong", timestamps: false }
 );
-
-Phong.belongsTo(ChiNhanh, { foreignKey: "id_chinhanh" });
 
 module.exports = Phong;
