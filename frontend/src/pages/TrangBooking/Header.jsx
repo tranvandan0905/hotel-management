@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@material-tailwind/react";
-
+import { Link } from "react-router-dom";
+  
 const images = Array.from({ length: 5 }, (_, i) => `/img/imgBanner/banner${i + 1}.png`);
 
 const Header = () => {
@@ -8,14 +9,14 @@ const Header = () => {
 
   return (
     <header className="fixed top-0 left-0 w-full flex justify-between items-center p-4 md:p-4 text-white bg-black shadow-md z-50 ">
-      <h1 className="text-base md:text-2xl font-bold tracking-wide flex items-center">
+      <Link to ="/" className="text-base md:text-2xl font-bold tracking-wide flex items-center">
         <img
-          src="./img/logo_booking_white.png"
+          src="/img/logo_booking_white.png"
           alt="Booking Logo"
           className="w-10 h-10 md:w-16 md:h-16 mr-2"
         />
         <span className="text-white">Hotel Booking</span>
-      </h1>
+      </Link>
       <nav className="flex items-center left-10"> 
         <button
           className="md:hidden text-white text-2xl mr-4 absolute right-4" 
