@@ -1,7 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../database");
-const KhachHang = require("./KhachHang");
-const DatLich = require("./DatLich");
+const sequelize = require("../database/database");
 
 const HoaDon = sequelize.define(
   "HoaDon",
@@ -10,11 +8,12 @@ const HoaDon = sequelize.define(
     HinhThucThanhToan: { type: DataTypes.STRING, allowNull: false },
     TongTien: { type: DataTypes.INTEGER, allowNull: false },
     TrangThai: { type: DataTypes.STRING, allowNull: false },
+    TrangThai_Delete: {  // Trường trạng thái (hidden or visible)
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,  // Mặc định là true, tức là hóa đơn sẽ hiển thị
+    },
   },
   { tableName: "hoadon", timestamps: false }
 );
-
-HoaDon.belongsTo(KhachHang, { foreignKey: "id_khachhang" });
-HoaDon.belongsTo(DatLich, { foreignKey: "id_lichdat" });
 
 module.exports = HoaDon;

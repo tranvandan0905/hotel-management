@@ -1,7 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../database");
-const ChiNhanh = require("./Chinhanh");
-const ViTri = require("./ViTri");
+const sequelize = require("../database/database");
 
 const NhanVien = sequelize.define(
   "NhanVien",
@@ -14,11 +12,9 @@ const NhanVien = sequelize.define(
     Email: { type: DataTypes.STRING, allowNull: false },
     Password: { type: DataTypes.STRING, allowNull: false },
     Luong: { type: DataTypes.INTEGER, allowNull: false },
+    Role: { type: DataTypes.STRING, allowNull: false },
   },
   { tableName: "nhanvien", timestamps: false }
 );
-
-NhanVien.belongsTo(ChiNhanh, { foreignKey: "id_chiNhanh" });
-NhanVien.belongsTo(ViTri, { foreignKey: "id_viTri" });
 
 module.exports = NhanVien;
