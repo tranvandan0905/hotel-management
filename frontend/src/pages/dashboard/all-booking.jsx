@@ -1,94 +1,39 @@
-import { useState, useMemo } from 'react';
-import { PlusIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { Card, Button, Typography, Input, Select, Option } from '@material-tailwind/react';
+import { useState, useEffect, useMemo } from "react";
+import axios from "axios";
+import {
+  Card, Button, Typography, Input, Select, Option,
+} from "@material-tailwind/react";
+import { PlusIcon, PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+
+const API_URL = "http://localhost:5000/api/datlich";
 
 const AllBooking = () => {
-  const initialBookings = [
-    {
-      id: 1,
-      hoTen: "Nguyễn Văn A",
-      sdt: "0123456789",
-      email: "a@example.com",
-      gioiTinh: "Nam",
-      ngayNhan: "2025-04-15",
-      ngayTra: "2025-04-17",
-      soNguoi: 2,
-      tongTien: 1500000,
-      phong: "P101",
-    },
-    {
-      id: 2,
-      hoTen: "Trần Thị B",
-      sdt: "0987654321",
-      email: "b@example.com",
-      gioiTinh: "Nữ",
-      ngayNhan: "2025-04-16",
-      ngayTra: "2025-04-18",
-      soNguoi: 4,
-      tongTien: 2500000,
-      phong: "P202",
-    },
-    {
-      id: 3, hoTen: "Lê Hoàng", sdt: "0934567890", email: "c@example.com", gioiTinh: "Nam", ngayNhan: "2025-04-10", ngayTra: "2025-04-12", soNguoi: 3, tongTien: 1800000, phong: "P303",
-    },
-    {
-      id: 4, hoTen: "Phạm Mai", sdt: "0923456789", email: "d@example.com", gioiTinh: "Nữ", ngayNhan: "2025-04-11", ngayTra: "2025-04-13", soNguoi: 2, tongTien: 1600000, phong: "P404",
-    },
-    {
-      id: 5, hoTen: "Đỗ Khánh", sdt: "0912345678", email: "e@example.com", gioiTinh: "Nam", ngayNhan: "2025-04-12", ngayTra: "2025-04-14", soNguoi: 1, tongTien: 1000000, phong: "P105",
-    },
-    {
-      id: 6, hoTen: "Ngô Thảo", sdt: "0901234567", email: "f@example.com", gioiTinh: "Nữ", ngayNhan: "2025-04-14", ngayTra: "2025-04-16", soNguoi: 2, tongTien: 1300000, phong: "P106",
-    },
-    {
-      id: 7, hoTen: "Trịnh Duy", sdt: "0976543210", email: "g@example.com", gioiTinh: "Nam", ngayNhan: "2025-04-13", ngayTra: "2025-04-15", soNguoi: 3, tongTien: 1700000, phong: "P107",
-    },
-    {
-      id: 8, hoTen: "Lý Hân", sdt: "0965432109", email: "h@example.com", gioiTinh: "Nữ", ngayNhan: "2025-04-15", ngayTra: "2025-04-18", soNguoi: 2, tongTien: 1400000, phong: "P108",
-    },
-    {
-      id: 9, hoTen: "Tống Bình", sdt: "0954321098", email: "i@example.com", gioiTinh: "Nam", ngayNhan: "2025-04-16", ngayTra: "2025-04-19", soNguoi: 2, tongTien: 1500000, phong: "P109",
-    },
-    {
-      id: 10, hoTen: "Mai Trang", sdt: "0943210987", email: "j@example.com", gioiTinh: "Nữ", ngayNhan: "2025-04-17", ngayTra: "2025-04-20", soNguoi: 1, tongTien: 1100000, phong: "P110",
-    },
-    {
-      id: 11, hoTen: "Bùi Phúc", sdt: "0932109876", email: "k@example.com", gioiTinh: "Nam", ngayNhan: "2025-04-18", ngayTra: "2025-04-21", soNguoi: 2, tongTien: 1400000, phong: "P111",
-    },
-    {
-      id: 12, hoTen: "Hồ Yến", sdt: "0921098765", email: "l@example.com", gioiTinh: "Nữ", ngayNhan: "2025-04-19", ngayTra: "2025-04-22", soNguoi: 3, tongTien: 1700000, phong: "P112",
-    },
-    {
-      id: 13, hoTen: "Vũ Thành", sdt: "0910987654", email: "m@example.com", gioiTinh: "Nam", ngayNhan: "2025-04-20", ngayTra: "2025-04-23", soNguoi: 1, tongTien: 1200000, phong: "P113",
-    },
-    {
-      id: 14, hoTen: "Trần Tín", sdt: "0909876543", email: "n@example.com", gioiTinh: "Nam", ngayNhan: "2025-04-21", ngayTra: "2025-04-24", soNguoi: 4, tongTien: 2500000, phong: "P114",
-    },
-    {
-      id: 15, hoTen: "Nguyễn Hà", sdt: "0898765432", email: "o@example.com", gioiTinh: "Nữ", ngayNhan: "2025-04-22", ngayTra: "2025-04-25", soNguoi: 2, tongTien: 1500000, phong: "P115",
-    },
-  ];
-
-  const [bookings, setBookings] = useState(initialBookings);
+  const [bookings, setBookings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState({
-    id: null,
-    hoTen: "",
-    sdt: "",
-    email: "",
-    gioiTinh: "",
-    ngayNhan: "",
-    ngayTra: "",
-    soNguoi: 1,
-    tongTien: 0,
-    phong: "",
+    id: null, hoTen: "", sdt: "", email: "", gioiTinh: "",
+    ngayNhan: "", ngayTra: "", soNguoi: 1, tongTien: 0, phong: ""
   });
 
   const itemsPerPage = 10;
   const totalPages = useMemo(() => Math.ceil(bookings.length / itemsPerPage), [bookings]);
   const currentBookings = useMemo(() =>
     bookings.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage), [bookings, currentPage]);
+
+  // Lấy danh sách từ API
+  const fetchBookings = async () => {
+    try {
+      const res = await axios.get(API_URL);
+      setBookings(res.data);
+    } catch (err) {
+      console.error("Lỗi tải danh sách đặt phòng:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchBookings();
+  }, []);
 
   const handleAdd = () => {
     setForm({
@@ -103,21 +48,31 @@ const AllBooking = () => {
     setIsEditing(true);
   };
 
-  const handleDelete = (id) => {
-    setBookings(prev => prev.filter(b => b.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${API_URL}/${id}`);
+      fetchBookings();
+    } catch (err) {
+      console.error("Lỗi xoá đặt phòng:", err);
+    }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const isValid = form.hoTen && form.sdt && form.email && form.ngayNhan && form.ngayTra && form.gioiTinh && form.phong;
     if (!isValid) return alert("Vui lòng nhập đầy đủ thông tin");
     if (new Date(form.ngayNhan) >= new Date(form.ngayTra)) return alert("Ngày nhận phải trước ngày trả");
 
-    setBookings(prev => {
-      if (form.id) return prev.map(b => b.id === form.id ? form : b);
-      return [...prev, { ...form, id: prev.length + 1 }];
-    });
-
-    setIsEditing(false);
+    try {
+      if (form.id) {
+        await axios.put(`${API_URL}/${form.id}`, form);
+      } else {
+        await axios.post(API_URL, form);
+      }
+      setIsEditing(false);
+      fetchBookings();
+    } catch (err) {
+      console.error("Lỗi khi lưu đặt phòng:", err);
+    }
   };
 
   return (
@@ -173,22 +128,22 @@ const AllBooking = () => {
             <tbody>
               {currentBookings.map((b, index) => (
                 <tr key={b.id} className="border-t text-center">
-                  <td className="p-2 align-middle">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                  <td className="p-2 align-middle">{b.hoTen}</td>
-                  <td className="p-2 align-middle">{b.sdt}</td>
-                  <td className="p-2 align-middle">{b.email}</td>
-                  <td className="p-2 align-middle">{b.gioiTinh}</td>
-                  <td className="p-2 align-middle">{b.ngayNhan}</td>
-                  <td className="p-2 align-middle">{b.ngayTra}</td>
-                  <td className="p-2 align-middle">{b.soNguoi}</td>
-                  <td className="p-2 align-middle">{b.tongTien.toLocaleString()}đ</td>
-                  <td className="p-2 align-middle">{b.phong}</td>
-                  <td className="p-2 align-middle">
-                    <div className="flex justify-center items-center gap-2">
-                      <button onClick={() => handleEdit(b)} className="text-blue-600 hover:underline">
+                  <td className="p-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                  <td className="p-2">{b.hoTen}</td>
+                  <td className="p-2">{b.sdt}</td>
+                  <td className="p-2">{b.email}</td>
+                  <td className="p-2">{b.gioiTinh}</td>
+                  <td className="p-2">{b.ngayNhan}</td>
+                  <td className="p-2">{b.ngayTra}</td>
+                  <td className="p-2">{b.soNguoi}</td>
+                  <td className="p-2">{b.tongTien.toLocaleString()}đ</td>
+                  <td className="p-2">{b.phong}</td>
+                  <td className="p-2">
+                    <div className="flex justify-center gap-2">
+                      <button onClick={() => handleEdit(b)} className="text-blue-600">
                         <PencilSquareIcon className="w-5 h-5" />
                       </button>
-                      <button onClick={() => handleDelete(b.id)} className="text-red-600 hover:underline">
+                      <button onClick={() => handleDelete(b.id)} className="text-red-600">
                         <TrashIcon className="w-5 h-5" />
                       </button>
                     </div>
@@ -199,7 +154,7 @@ const AllBooking = () => {
           </table>
         </div>
 
-        <div className="flex justify-center items-center gap-4 mt-4 flex-wrap">
+        <div className="flex justify-center gap-4 mt-4 flex-wrap">
           <Button disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)}>Trang trước</Button>
           <span>Trang {currentPage} / {totalPages}</span>
           <Button disabled={currentPage === totalPages} onClick={() => setCurrentPage((p) => p + 1)}>Trang sau</Button>
