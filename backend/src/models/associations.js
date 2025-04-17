@@ -22,9 +22,7 @@ ChiNhanh.hasMany(NhanVien, { foreignKey: "id_chinhanh" });
 Phong.belongsTo(ChiNhanh, { foreignKey: "id_chinhanh" });
 ChiNhanh.hasMany(Phong, { foreignKey: "id_chinhanh" });
 
-// Quan hệ nhiều - nhiều giữa Phòng và Tiện Ích Phòng
-Phong.belongsToMany(TienIchPhong, { through: Phong_TienIch, foreignKey: "id_phong" });
-TienIchPhong.belongsToMany(Phong, { through: Phong_TienIch, foreignKey: "id_tienich" });
+
 
 // Định nghĩa bảng trung gian giữa Phòng và Tiện Ích Phòng (N-N)
 
@@ -47,6 +45,8 @@ const Phong_TienIch = sequelize.define(
     { tableName: "Phong_TienIch", timestamps: false }
 );
 
-
+// Quan hệ nhiều - nhiều giữa Phòng và Tiện Ích Phòng
+Phong.belongsToMany(TienIchPhong, { through: Phong_TienIch, foreignKey: "id_phong" });
+TienIchPhong.belongsToMany(Phong, { through: Phong_TienIch, foreignKey: "id_tienich" });
 
 module.exports = { DatLich, HoaDon, Phong, NhanVien, ChiNhanh, Phong_TienIch, TienIchPhong };

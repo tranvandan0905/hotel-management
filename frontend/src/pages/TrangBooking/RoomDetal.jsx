@@ -8,68 +8,108 @@ export default function RoomDetail() {
   const [room, setRoom] = useState(null);
   const [currentImage, setCurrentImage] = useState("");
 
-  useEffect(() => {
-    const fakeRoom = {
-      id,
-      tenPhong: "Phòng Deluxe",
-      moTa: "Phòng cao cấp có view thành phố, đầy đủ tiện nghi.",
-      giaTien: 1500000,
-      hinhAnh: [
-        "/img/rooms/room1.png",
-        "/img/rooms/room2.png",
-        "/img/rooms/room3.png"
-      ],
-      tienNghi: [
-        "Wi-Fi", "Hồ bơi", "Bồn tắm", "Chỗ đậu xe", "Máy lạnh", "TV màn hình phẳng"
-      ]
-    };
-    setTimeout(() => {
-      setRoom(fakeRoom);
-      setCurrentImage(fakeRoom.hinhAnh[0]);
-    }, 500);
-  }, [id]);
-
   const [form, setForm] = useState({
     hoTen: "",
     email: "",
     sdt: "",
     cccd: "",
+    gioiTinh: "true",
     checkIn: "",
     checkOut: "",
-    adults: 1,
-    kids: 0,
+    soNguoi : 1
   });
 
-  const handleBook = () => {
+  useEffect(() => {
+    const fetchRoomDetail = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/v1/api/phongs/${id}`);
+        const data = await res.json();
+        setRoom({
+          id: data.id,
+          tenPhong: `Phòng ${data.SoPhong} - ${data.Loai}`,
+          moTa: data.MoTa || "Phòng đầy đủ tiện nghi",
+          giaTien: data.Gia,
+          hinhAnh: [data.HinhAnh],
+          tienNghi: data.TienIchPhongs?.map(ti => `${ti.TenTienIch} (${ti.MoTa})`) || [],
+          raw: data
+        });
+        setCurrentImage(data.HinhAnh);
+      } catch (err) {
+        alert("Không thể tải chi tiết phòng");
+      }
+    };
+
+    fetchRoomDetail();
+  }, [id]);
+
+  const calculateNights = () => {
+    if (!form.checkIn || !form.checkOut) return 0;
+    const start = new Date(form.checkIn);
+    const end = new Date(form.checkOut);
+    const diffTime = end - start;
+    const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return nights > 0 ? nights : 0;
+  };
+
+  const calculateTotal = () => {
+    const nights = calculateNights();
+    return nights * (room?.giaTien || 0);
+  };
+
+  const handleBook = async () => {
     if (
       !form.hoTen || !form.email || !form.sdt || !form.cccd ||
       !form.checkIn || !form.checkOut
     ) {
-      return alert(" Vui lòng điền đầy đủ thông tin!");
+      return alert("Vui lòng điền đầy đủ thông tin!");
     }
-  
+
     if (!/^\d{10,11}$/.test(form.sdt)) {
       return alert("Số điện thoại phải từ 10 đến 11 chữ số!");
     }
-  
+
     if (!form.email.includes("@")) {
       return alert("Email không hợp lệ! Phải chứa ký tự '@'");
     }
-  
+
     if (!/^\d{12}$/.test(form.cccd)) {
       return alert("CCCD không hợp lệ! Phải là số có 12 chữ số.");
     }
-  
+
     const checkInDate = new Date(form.checkIn);
     const checkOutDate = new Date(form.checkOut);
-  
+
     if (checkInDate >= checkOutDate) {
       return alert("Ngày nhận phòng phải trước ngày trả phòng!");
     }
-  
-    alert(`✅ Đặt phòng thành công cho ${form.hoTen}!\nTừ ${form.checkIn} đến ${form.checkOut}`);
+
+    try {
+      const res = await fetch(`http://localhost:5000/v1/api/datlich`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          HoTen: form.hoTen,
+          email: form.email,
+          SDT: form.sdt,
+          GioiTinh: form.gioiTinh === "true",
+          SoNguoi: parseInt(form.soNguoi || 0),
+          NgayNhan: form.checkIn,
+          NgayTra: form.checkOut,
+          TongTien: calculateTotal(),
+          id_phong: room.raw.id,
+        }),
+      });
+
+      if (res.ok) {
+        alert(`Đặt phòng thành công cho ${form.hoTen}!`);
+      } else {
+        alert("Đặt phòng thất bại!");
+      }
+    } catch (err) {
+      console.error("Lỗi đặt phòng:", err);
+      alert("Lỗi kết nối đến server.");
+    }
   };
-  
 
   if (!room) return <div className="text-black p-6">Đang tải thông tin phòng...</div>;
 
@@ -81,14 +121,12 @@ export default function RoomDetail() {
         <h1 className="text-4xl font-bold mb-2">{room.tenPhong}</h1>
         <p className="text-gray-700 text-base mb-6 max-w-3xl leading-relaxed">{room.moTa}</p>
 
-        {/* Ảnh lớn */}
         <img
           src={currentImage}
           alt="Ảnh phòng"
           className="w-full max-w-4xl rounded-xl shadow-lg mb-4 object-cover"
         />
 
-        {/* Thumbnail ảnh */}
         <div className="flex gap-3 mb-10 overflow-x-auto">
           {room.hinhAnh.map((img, index) => (
             <img
@@ -104,80 +142,64 @@ export default function RoomDetail() {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-10">
-          {/* Form đặt phòng */}
           <div className="bg-gray-100 p-6 rounded-xl shadow-md w-full lg:w-[400px]">
             <h2 className="text-xl font-semibold mb-4">Đặt phòng ngay</h2>
 
-            <input
-              type="text"
-              placeholder="Họ và tên"
-              value={form.hoTen}
-              onChange={(e) => setForm({ ...form, hoTen: e.target.value })}
-              className="w-full mb-3 p-2 rounded border border-gray-300"
-            />
-            <input
-              type="email"
-              placeholder="Email"
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="w-full mb-3 p-2 rounded border border-gray-300"
-            />
-            <input
-              type="text"
-              placeholder="Số điện thoại"
-              value={form.sdt}
-              onChange={(e) => setForm({ ...form, sdt: e.target.value })}
-              className="w-full mb-3 p-2 rounded border border-gray-300"
-            />
-            <input
-              type="text"
-              placeholder="Số CCCD"
-              value={form.cccd}
-              onChange={(e) => setForm({ ...form, cccd: e.target.value })}
-              className="w-full mb-3 p-2 rounded border border-gray-300"
-            />
+            <input type="text" placeholder="Họ và tên" value={form.hoTen} onChange={(e) => setForm({ ...form, hoTen: e.target.value })} className="w-full mb-3 p-2 rounded border border-gray-300" />
+            <input type="email" placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full mb-3 p-2 rounded border border-gray-300" />
+            <input type="text" placeholder="Số điện thoại" value={form.sdt} onChange={(e) => setForm({ ...form, sdt: e.target.value })} className="w-full mb-3 p-2 rounded border border-gray-300" />
+            <input type="text" placeholder="Số CCCD" value={form.cccd} onChange={(e) => setForm({ ...form, cccd: e.target.value })} className="w-full mb-3 p-2 rounded border border-gray-300" />
+
+            {/* Chọn giới tính */}
+            <div className="flex gap-4 items-center mb-3">
+              <label>
+                <input
+                  type="radio"
+                  name="gioiTinh"
+                  value="true"
+                  checked={form.gioiTinh === "true"}
+                  onChange={(e) => setForm({ ...form, gioiTinh: e.target.value })}
+                /> Nam
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="gioiTinh"
+                  value="false"
+                  checked={form.gioiTinh === "false"}
+                  onChange={(e) => setForm({ ...form, gioiTinh: e.target.value })}
+                /> Nữ
+              </label>
+            </div>
+
+            <input type="date" value={form.checkIn}
+             min={new Date().toISOString().split("T")[0]}
+             onChange={(e) => setForm({ ...form, checkIn: e.target.value })} className="w-full mb-3 p-2 rounded border border-gray-300" />
+            <input type="date" value={form.checkOut} 
+            min = {form.checkIn}
+            onChange={(e) => setForm({ ...form, checkOut: e.target.value })} className="w-full mb-3 p-2 rounded border border-gray-300" />
 
             <input
-              type="date"
-              value={form.checkIn}
-              onChange={(e) => setForm({ ...form, checkIn: e.target.value })}
-              className="w-full mb-3 p-2 rounded border border-gray-300"
-            />
-            <input
-              type="date"
-              value={form.checkOut}
-              onChange={(e) => setForm({ ...form, checkOut: e.target.value })}
-              className="w-full mb-3 p-2 rounded border border-gray-300"
-            />
+                  type="number"
+                  min="1"
+                  placeholder="Số người"
+                  value={form.soNguoi || ""}
+                  onChange={(e) => setForm({ ...form, soNguoi: e.target.value })}
+                  className="w-full mb-3 p-2 rounded border border-gray-300"
+                />
+            {/* Tổng tiền & số đêm */}
+            {calculateNights() > 0 && (
+              <div className="text-right text-base font-medium text-gray-800 mt-2">
+                Số đêm: {calculateNights()}<br />
+                Tổng tiền: <span className="text-green-600 font-bold">{calculateTotal().toLocaleString()}đ</span>
+              </div>
+            )}
 
-            <select
-              value={form.adults}
-              onChange={(e) => setForm({ ...form, adults: e.target.value })}
-              className="w-full mb-3 p-2 rounded border border-gray-300"
-            >
-              {[1, 2, 3, 4, 5].map((n) => (
-                <option key={n}>{n} Người lớn</option>
-              ))}
-            </select>
-            <select
-              value={form.kids}
-              onChange={(e) => setForm({ ...form, kids: e.target.value })}
-              className="w-full mb-3 p-2 rounded border border-gray-300"
-            >
-              {[0, 1, 2, 3].map((n) => (
-                <option key={n}>{n} Trẻ em</option>
-              ))}
-            </select>
-
-            <button
-              onClick={handleBook}
-              className="bg-orange-700 text-white w-full py-2 mt-2 font-bold rounded"
-            >
+            <button onClick={handleBook} className="bg-orange-700 text-white w-full py-2 mt-3 font-bold rounded">
               ĐẶT NGAY - {room.giaTien.toLocaleString()}đ / đêm
             </button>
           </div>
 
-          {/* Nội dung bên phải */}
           <div className="flex-1">
             <h2 className="text-2xl font-bold mb-4">Nội quy khách sạn</h2>
             <ul className="list-disc pl-6 text-gray-700 space-y-2">

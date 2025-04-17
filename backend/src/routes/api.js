@@ -46,7 +46,7 @@ routerAPI.get("/tienichphong", getTienIchPhongController);
 routerAPI.get("/chinhanh", getAllChiNhanhController);
 routerAPI.get("/datlich", getAllDatLichController);
 routerAPI.post("/login", login);
-
+routerAPI.post("/datlich", createDatLichController);
 
 // Authenticated Routes (nhân viên hoặc admin)
 routerAPI.use(authenticate);
@@ -59,7 +59,6 @@ routerAPI.put("/phongs/:id", withRole("NhanVien", "Admin"), updatePhongControlle
 routerAPI.delete("/phongs/:id", withRole("NhanVien", "Admin"), deletePhongController);
 
 routerAPI.get("/datlich/:id", withRole("NhanVien", "Admin"), getDatLichByIdController);
-routerAPI.post("/datlich", withRole("NhanVien", "Admin"), createDatLichController);
 routerAPI.put("/datlich/:id", withRole("NhanVien", "Admin"), updateDatLichController);
 routerAPI.delete("/datlich/:id", withRole("NhanVien", "Admin"), deleteDatLichController);
 
