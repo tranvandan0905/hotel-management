@@ -72,6 +72,10 @@ const AllBooking = () => {
     if (!form.id) return;
     try {
       const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Bạn cần đăng nhập để cập nhật trạng thái!");
+        return;
+      }
       await axios.put(`${API_URL}/${form.id}`, {
         Check: form.check,
       }, {
