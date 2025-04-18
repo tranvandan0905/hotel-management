@@ -13,7 +13,7 @@ const AllBooking = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState({
     id: null,
-    trangThai: "Đang xác nhận",
+    check: 0,
   });
 
   const itemsPerPage = 10;
@@ -26,7 +26,7 @@ const AllBooking = () => {
       const res = await axios.get(API_URL);
       const mapped = res.data.map(b => ({
         id: b.id,
-        hoTen: b.HoTen || b.hoTen || "",         // fallback nếu backend gửi tên khác
+        hoTen: b.HoTen || b.hoTen || "",
         sdt: b.SDT || b.sdt || "",
         email: b.Email || b.email || "",
         gioiTinh: b.GioiTinh === true ? "Nam" : b.GioiTinh === false ? "Nữ" : "Khác",
@@ -35,7 +35,8 @@ const AllBooking = () => {
         soNguoi: b.SoNguoi || b.soNguoi || 0,
         tongTien: b.TongTien || b.tongTien || 0,
         phong: b?.Phong?.SoPhong || b.phong || "",
-        trangThai: b.check ? "Đã xác nhận" : "Đang xác nhận",
+        check: b.Check || 0,
+        trangThai: b.Check ? "Đã xác nhận" : "Đang xác nhận",
       }));
       setBookings(mapped);
     } catch (err) {
@@ -48,13 +49,18 @@ const AllBooking = () => {
   }, []);
 
   const handleEdit = (booking) => {
-    setForm({ id: booking.id, trangThai: booking.trangThai });
+    setForm({ id: booking.id, check: booking.check });
     setIsEditing(true);
   };
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      const token = localStorage.getItem("token");
+      await axios.delete(`${API_URL}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       fetchBookings();
     } catch (err) {
       console.error("Lỗi xoá đặt phòng:", err);
@@ -64,8 +70,13 @@ const AllBooking = () => {
   const handleSubmit = async () => {
     if (!form.id) return;
     try {
-      await axios.patch(`${API_URL}/${form.id}`, {
-        check: form.trangThai === "Đã xác nhận"
+      const token = localStorage.getItem("token");
+      await axios.put(`http://localhost:5000/v1/api/datlich/${form.id}`, {
+        Check: form.check,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
       setIsEditing(false);
       fetchBookings();
@@ -83,9 +94,9 @@ const AllBooking = () => {
 
         {isEditing && (
           <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 bg-gray-100 p-4 rounded">
-            <Select label="Trạng thái" value={form.trangThai} onChange={(val) => setForm({ ...form, trangThai: val })}>
-              <Option value="Đang xác nhận">Đang xác nhận</Option>
-              <Option value="Đã xác nhận">Đã xác nhận</Option>
+            <Select label="Trạng thái" value={form.check.toString()} onChange={(val) => setForm({ ...form, check: Number(val) })}>
+              <Option value="0">Đang xác nhận</Option>
+              <Option value="1">Đã xác nhận</Option>
             </Select>
             <div className="col-span-1 sm:col-span-2 flex gap-2 mt-2">
               <Button color="green" onClick={handleSubmit}>Lưu</Button>
@@ -123,7 +134,7 @@ const AllBooking = () => {
                   <td className="p-2">{b.ngayNhan}</td>
                   <td className="p-2">{b.ngayTra}</td>
                   <td className="p-2">{b.soNguoi}</td>
-                  <td className="p-2">{(Number(b.tongTien || 0)).toLocaleString()}đ</td>
+                  <td className="p-2">{Number(b.tongTien || 0).toLocaleString()}đ</td>
                   <td className="p-2">{b.phong}</td>
                   <td className="p-2">{b.trangThai}</td>
                   <td className="p-2">

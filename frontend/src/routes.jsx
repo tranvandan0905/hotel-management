@@ -53,22 +53,7 @@ export const routes = [
       }
     ],
   },
-  {
-    title: "auth pages",
-    layout: "auth",
-    pages: [
-      {
-        name: "Sign In",
-        path: "/sign-in",
-        element: <SignIn />,
-      },
-      {
-        name: "Sign Up",
-        path: "/sign-up",
-        element: <SignUp />,
-      },
-    ],
-  },
+  
 ];
 
 export default routes;
