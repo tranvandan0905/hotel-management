@@ -3,7 +3,7 @@ import axios from "axios";
 import {
   Card, Button, Typography, Select, Option,
 } from "@material-tailwind/react";
-import { PlusIcon, PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 const API_URL = "http://localhost:5000/v1/api/datlich";
 
@@ -11,10 +11,7 @@ const AllBooking = () => {
   const [bookings, setBookings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isEditing, setIsEditing] = useState(false);
-  const [form, setForm] = useState({
-    id: null,
-    check: 0,
-  });
+  const [form, setForm] = useState({ id: null, check: 0 });
 
   const itemsPerPage = 10;
   const totalPages = useMemo(() => Math.ceil(bookings.length / itemsPerPage), [bookings]);
@@ -24,20 +21,24 @@ const AllBooking = () => {
   const fetchBookings = async () => {
     try {
       const res = await axios.get(API_URL);
-      const mapped = res.data.map(b => ({
-        id: b.id,
-        hoTen: b.HoTen || b.hoTen || "",
-        sdt: b.SDT || b.sdt || "",
-        email: b.Email || b.email || "",
-        gioiTinh: b.GioiTinh === true ? "Nam" : b.GioiTinh === false ? "Nữ" : "Khác",
-        ngayNhan: b.NgayNhan?.slice(0, 10) || "",
-        ngayTra: b.NgayTra?.slice(0, 10) || "",
-        soNguoi: b.SoNguoi || b.soNguoi || 0,
-        tongTien: b.TongTien || b.tongTien || 0,
-        phong: b?.Phong?.SoPhong || b.phong || "",
-        check: b.Check || 0,
-        trangThai: b.Check ? "Đã xác nhận" : "Đang xác nhận",
-      }));
+      const mapped = res.data.map(b => {
+        const checkRaw = b.Check ?? 0;
+        const checkValue = parseInt(checkRaw) === 1 ? 1 : 0;
+        return {
+          id: b.id,
+          hoTen: b.HoTen || b.hoTen || "",
+          sdt: b.SDT || b.sdt || "",
+          email: b.Email || b.email || "",
+          gioiTinh: b.GioiTinh === true ? "Nam" : b.GioiTinh === false ? "Nữ" : "Khác",
+          ngayNhan: b.NgayNhan?.slice(0, 10) || "",
+          ngayTra: b.NgayTra?.slice(0, 10) || "",
+          soNguoi: b.SoNguoi || b.soNguoi || 0,
+          tongTien: b.TongTien || b.tongTien || 0,
+          phong: b?.Phong?.SoPhong || b.phong || "",
+          check: checkValue,
+          trangThai: checkValue === 1 ? "Đã xác nhận" : "Đang xác nhận",
+        }
+      });
       setBookings(mapped);
     } catch (err) {
       console.error("Lỗi tải danh sách đặt phòng:", err);
@@ -71,7 +72,7 @@ const AllBooking = () => {
     if (!form.id) return;
     try {
       const token = localStorage.getItem("token");
-      await axios.put(`http://localhost:5000/v1/api/datlich/${form.id}`, {
+      await axios.put(`${API_URL}/${form.id}`, {
         Check: form.check,
       }, {
         headers: {

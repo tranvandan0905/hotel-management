@@ -34,9 +34,9 @@ const createDatLichController = async (req, res) => {
 };
 const updateDatLichController = async (req, res) => {
     const { id } = req.params;
-    const { HoTen, SDT, email, GioiTinh, NgayNhan, NgayTra,SoNguoi, TongTien, id_phong } = req.body;
+    const { HoTen, SDT, email, GioiTinh, NgayNhan, NgayTra,SoNguoi, TongTien, id_phong ,Check} = req.body;
     try {
-        const updatedDatLich = await updateDatLich(id, HoTen, SDT, email, GioiTinh,SoNguoi, NgayNhan, NgayTra, TongTien, id_phong);
+        const updatedDatLich = await updateDatLich(id, HoTen, SDT, email, GioiTinh,SoNguoi, NgayNhan, NgayTra, TongTien, id_phong,Check);
         res.status(200).json(updatedDatLich);
     } catch (error) {
         res.status(500).json({ message: error.message });

@@ -51,27 +51,29 @@ const createDatLich = async (HoTen, SDT, email, GioiTinh, NgayNhan, SoNguoi, Nga
     }
 };
 
-const updateDatLich = async (id, HoTen, SDT, email, GioiTinh, NgayNhan, SoNguoi, NgayTra, TongTien, id_phong) => {
+const updateDatLich = async (id, HoTen, SDT, email, GioiTinh, NgayNhan, SoNguoi, NgayTra, TongTien, id_phong,Check) => {
     try {
         const datlich = await DatLich.findOne({ where: { id } });
         if (!datlich) {
             throw new Error("Booking not found");
         }
-
-        const phong = await Phong.findOne({ where: { id: id_phong } });
-        if (!phong) {
-            throw new Error("Phong not found");
+        if(id_phong)
+        {
+            const phong = await Phong.findOne({ where: { id: id_phong } });
+            if (!phong) {
+                throw new Error("Phong not found");
+            }
         }
-
         datlich.HoTen = HoTen || datlich.HoTen;
         datlich.SDT = SDT || datlich.SDT;
         datlich.email = email || datlich.email;
         datlich.GioiTinh = GioiTinh || datlich.GioiTinh;
         datlich.NgayNhan = NgayNhan || datlich.NgayNhan;
         datlich.NgayTra = NgayTra || datlich.NgayTra;
+        datlich.SoNguoi = SoNguoi || datlich.SoNguoi;
         datlich.TongTien = TongTien || datlich.TongTien;
         datlich.id_phong = id_phong || datlich.id_phong;
-        datlich.TongTien = SoNguoi || datlich.SoNguoi;
+        datlich.Check = Check || datlich.Check;
         await datlich.save();
         return datlich;
     } catch (error) {
