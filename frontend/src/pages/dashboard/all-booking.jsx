@@ -4,8 +4,7 @@ import axios from "axios";
 import {
   Card, Button, Typography, Select, Option,
 } from "@material-tailwind/react";
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { Navigate } from "react-router-dom";
+import { PencilSquareIcon, TrashIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
 
 const API_URL = "http://localhost:5000/v1/api/datlich";
 
@@ -26,7 +25,7 @@ const AllBooking = () => {
       const res = await axios.get(API_URL);
       const mapped = res.data.map(b => {
         const checkRaw = b.Check ?? 0;
-        const checkValue = parseInt(checkRaw) === 1 ? 1 : 0;
+        const checkValue = parseInt(checkRaw);
         return {
           id: b.id,
           hoTen: b.HoTen || b.hoTen || "",
@@ -94,6 +93,10 @@ const AllBooking = () => {
     }
   };
 
+  const handleCreateInvoice = (bookingId) => {
+    navigate(`/dashboard/hoadon/${bookingId}`);
+  };
+
   return (
     <div className="mt-8 px-2 md:px-6">
       <Card className="p-4 shadow-sm">
@@ -154,6 +157,11 @@ const AllBooking = () => {
                       <button onClick={() => handleDelete(b.id)} className="text-red-600">
                         <TrashIcon className="w-5 h-5" />
                       </button>
+                      {b.check === 1 && (
+                        <button onClick={() => handleCreateInvoice(b.id)} className="text-green-600">
+                          <DocumentTextIcon className="w-5 h-5" />
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
