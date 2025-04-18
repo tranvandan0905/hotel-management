@@ -1,13 +1,16 @@
 import { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   Card, Button, Typography, Select, Option,
 } from "@material-tailwind/react";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { Navigate } from "react-router-dom";
 
 const API_URL = "http://localhost:5000/v1/api/datlich";
 
 const AllBooking = () => {
+  const navigate = useNavigate();
   const [bookings, setBookings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isEditing, setIsEditing] = useState(false);
@@ -74,6 +77,7 @@ const AllBooking = () => {
       const token = localStorage.getItem("token");
       if (!token) {
         alert("Bạn cần đăng nhập để cập nhật trạng thái!");
+        navigate("/auth/sign-in");
         return;
       }
       await axios.put(`${API_URL}/${form.id}`, {
